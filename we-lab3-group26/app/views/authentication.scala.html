@@ -1,0 +1,62 @@
+@(loginForm:Form[Member], loginsuccess:Boolean)
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Business Informatics Group Quiz - Login</title>
+        <link rel="stylesheet" type="text/css" href="assets/stylesheets/main.css" />
+    </head>
+    <body id="loginpage">
+        <a class="accessibility" href="#login">@Messages("authentication.tologin")</a>
+        <header role="banner" aria-labelledby="mainheading"><h1 id="mainheading"><span class="accessibility">Business Informatics Group</span> Quiz</h1></header>
+        <nav role="navigation" aria-labelledby="navheading">
+            <h2 id="navheading" class="accessibility">Navigation</h2>
+            <ul>
+                <li><a id="registerlink" title='@Messages("authentication.clicktoregistration")' href="registration" accesskey="r">@Messages("authentication.registry")</a></li>
+            </ul>
+        </nav>
+        <!-- Login section -->
+        <section role="main">
+            <section id="login" aria-labelledby="loginheading">
+                @helper.form(action = routes.Application.login(), 'novalidate -> "novalidate"){
+                    <fieldset>
+                        <legend id="loginheading">Login</legend>
+                        
+                        @helper.inputText(loginForm("userName"),
+	                    	'_label -> Messages("authentication.username"),
+	                    	'pattern -> "\\w{4,8}",
+	                    	'required -> "required",
+	                    	'_showErrors -> false
+	                	)
+                        
+                        @helper.inputPassword(loginForm("password"),
+	                    	'_label -> Messages("authentication.password"),
+	                    	'pattern -> "\\w{4,8}",
+	                    	'required -> "required",
+	                    	'_showErrors -> false
+	                	)		 
+						@if(loginsuccess == false){
+							<div id="error_msg_login" class="" role="alert">
+								@Messages("authentication.wrongLogin")
+							</div>
+						}
+						
+						<input id="loginsubmit" type="submit" value='@Messages("authentication.loginButton")'></input>
+                        
+                    </fieldset>
+                }
+            </section>
+            <!-- Register section -->
+            <section id="register" aria-labelledby="registerheading">
+                <h2 id="registerheading" class="accessibility">@Messages("authentication.registration")</h2>
+                <p>@Messages("authentication.registrationquestion")</p>
+                <a href="registration">@Messages("authentication.toregistration")</a>
+            </section>
+        </section>
+
+        <!-- footer -->
+        <footer role="contentinfo">© 2014 BIG Quiz</footer>
+    </body>
+</html>
