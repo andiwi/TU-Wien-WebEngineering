@@ -51,8 +51,7 @@ public class Play extends Controller {
 		for(Entry<String, String[]> entry : answers.entrySet()){
 			//TODO fragen beantworten und in game setzen!
 		}*/
-		
-		List<Choice> answeredChoices = choices; //nur zum testen, beantwortet alle Fragen!
+		List<Choice> answeredChoices = choices; //TODO nur zum testen, beantwortet alle Fragen!
 		
 		round.answerCurrentQuestion(answeredChoices, 30, user, factory);	//TODO wie lange hat der User wirklcih gebraucht?
 		

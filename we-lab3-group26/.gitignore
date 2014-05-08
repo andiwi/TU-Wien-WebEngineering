@@ -13,3 +13,20 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+/.target
+
+### Eclipse ###
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath

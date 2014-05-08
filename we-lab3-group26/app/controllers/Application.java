@@ -36,7 +36,7 @@ public class Application extends Controller {
     	boolean loginsuccess = false;
     	EntityManager em = play.db.jpa.JPA.em();
 		String queryString = "SELECT u FROM Member u WHERE u.userName = :userName";
-    	TypedQuery<Member> query = em.createQuery(queryString, Member.class).setParameter("userName", "maalag");
+    	TypedQuery<Member> query = em.createQuery(queryString, Member.class).setParameter("userName", userName);
     	List<Member> result = query.getResultList();
     	if(!result.isEmpty()){
     		if(result.get(0).getPassword().equals(password)){
