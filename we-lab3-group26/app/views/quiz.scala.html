@@ -1,4 +1,4 @@
-@(question: Question)
+@(question: Question, answersOverviewUser: List[String], answersOverviewComputer: List[String])
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
@@ -28,17 +28,17 @@
                 <div id="player1info">
                     <span id="player1name">@Messages("quiz.player") 1</span>
                     <ul class="playerroundsummary">
-                        <li><span class="accessibility">@Messages("quiz.question") 1:</span><span id="player1answer1" class="correct">@Messages("quiz.correct")</span></li>
-                        <li><span class="accessibility">@Messages("quiz.question") 2:</span><span id="player1answer2" class="incorrect">@Messages("quiz.incorrect")</span></li>
-                        <li><span class="accessibility">@Messages("quiz.question") 3:</span><span id="player1answer3" class="unknown">@Messages("quiz.unknown")</span></li>
+                       	@for((answer, index) <- answersOverviewUser.zipWithIndex){
+                    		<li><span class="accessibility">@Messages("quiz.question") @index:</span><span id="player1answer@index" class="@answer">@Messages("quiz.@answer")</span></li>
+                    	}
                     </ul>
                 </div>
                 <div id="player2info">
                     <span id="player2name">@Messages("quiz.player") 2</span>
                     <ul class="playerroundsummary">
-                        <li><span class="accessibility">@Messages("quiz.question") 1:</span><span id="player2answer1" class="correct">@Messages("quiz.correct")</span></li>
-                        <li><span class="accessibility">@Messages("quiz.question") 2:</span><span id="player2answer2" class="correct">@Messages("quiz.correct")</span></li>
-                        <li><span class="accessibility">@Messages("quiz.question") 3:</span><span id="player2answer3" class="unknown">@Messages("quiz.unknown")</span></li>
+                        @for((answer, index) <- answersOverviewComputer.zipWithIndex){
+                    		<li><span class="accessibility">@Messages("quiz.question") @index:</span><span id="player2answer@index" class="@answer">@Messages("quiz.@answer")</span></li>
+                    	}
                     </ul>
                 </div>
                 <div id="currentcategory"><span class="accessibility">@Messages("quiz.category"):</span> Sport</div>
@@ -47,16 +47,16 @@
             <!-- Question -->
             <section id="question" aria-labelledby="questionheading">
                 
-                <form id="questionform" action="question" method="post">
-                @helper.form(action = routes.Play.anwerQuestion()){
+                <!-- <form id="questionform" action="question" method="post"> -->
+                @helper.form(action = routes.Play.answerQuestion()){
                     <h2 id="questionheading" class="accessibility">@Messages("quiz.question")</h2>
                     <p id="questiontext">@question.getText</p>
                     <ul id="answers">
                     	@for((choice, index) <- question.getAllChoices.zipWithIndex){
-                    		<li><input id="option@index" type="checkbox"/ value="@index"><label for="option@index">@choice.getText</label></li>
+                    		<li><input name="option@index" id="option@index" type="checkbox"/ value="@choice.getId"><label for="option@index">@choice.getText</label></li>
                     	}
                     </ul>
-                    <input id="timeleftvalue" type="hidden" value="100"/>
+                    <input id="timeleftvalue" name="timeleftvalue" type="hidden" value="100"/>
                     <input id="next" type="submit" value="weiter" accesskey="s"/>
                 }
             </section>
@@ -121,7 +121,7 @@
                 timeleft.text(secToMMSS(value));
                 
                 if(value <= 0) {
-                    $('#questionform').submit();
+                    //$('#questionform').submit();
                 }
             }
             

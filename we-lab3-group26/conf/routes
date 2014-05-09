@@ -14,13 +14,16 @@ POST    /registration				controllers.Registration.signup()
 # call quiz without login-info
 GET		/quiz						controllers.Application.index()
 
-# nextQuestion
-POST	/question					controllers.Play.anwerQuestion()
-
 # after login
 POST	/login						controllers.Application.login()
 
-# quizofer
+# startQuiz
+# GET		/index					controllers.Play.startGame()
+
+# nextQuestion
+POST	/question					controllers.Play.answerQuestion()
+
+# quizover
 GET 	/quizover					controllers.Play.finish()
 
 # neue Runde

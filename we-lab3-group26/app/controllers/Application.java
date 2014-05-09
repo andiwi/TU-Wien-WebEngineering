@@ -42,6 +42,7 @@ public class Application extends Controller {
     		if(result.get(0).getPassword().equals(password)){
     			Member user = result.get(0);
     			return Play.startGame(user);
+    			//return ok(index.render()); //TODO zuerst auf Index Seite navigieren
     		}
     	}
     	    	
