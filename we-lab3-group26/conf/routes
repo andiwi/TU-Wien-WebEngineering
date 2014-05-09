@@ -11,9 +11,6 @@ GET     /registration				controllers.Registration.index()
 # Register
 POST    /registration				controllers.Registration.signup()
 
-# call quiz without login-info
-GET		/quiz						controllers.Application.index()
-
 # after login
 POST	/login						controllers.Application.login()
 
@@ -23,12 +20,11 @@ POST	/login						controllers.Application.login()
 # nextQuestion
 POST	/question					controllers.Play.answerQuestion()
 
-# quizover
-GET 	/quizover					controllers.Play.finish()
+# nextRound
+GET		/roundover					controllers.Play.newRound()
 
-# neue Runde
-GET		/question					controllers.Play.newRound()
-
+# nextGame
+GET		/quizover				controllers.Play.nextGame()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

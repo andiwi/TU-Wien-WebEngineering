@@ -1,3 +1,5 @@
+@(game: QuizGame, user: User, computer: User)
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de">
@@ -23,21 +25,24 @@
             <!-- winner message -->
             <section id="roundwinner" aria-labelledby="roundwinnerheading">
                 <h2 id="roundwinnerheading" class="accessibility">@Messages("quizover.finalscore")</h2>
-                <p class="roundwinnermessage">@Messages("quiz.player") 2 @Messages("quizover.win")!</p>
+                <p class="roundwinnermessage">@game.getWinner().getName()  @Messages("quiz.player") 2 @Messages("quizover.win")!</p>
             </section>
         
             <!-- round info -->    
             <section id="roundinfo" aria-labelledby="roundinfoheading">
                 <h2 id="roundinfoheading" class="accessibility">@Messages("quiz.playerinformations")</h2>
                 <div id="player1info" class="playerinfo">
-                    <span id="player1name" class="playername">@Messages("quiz.player") 1</span>
-                    <p id="player1roundcounter" class="playerroundcounter">@Messages("quizover.wonrounds"): <span id="player1wonrounds" class="playerwonrounds">2</span></p>
+                    <span id="player1name" class="playername">@Messages("quiz.player") @game.getPlayers().get(0).getName()</span>
+                    <p id="player1roundcounter" class="playerroundcounter">@Messages("quizover.wonrounds"): <span id="player1wonrounds" class="playerwonrounds">@game.getWonRounds(user)</span></p>
                 </div>
                 <div id="player2info" class="playerinfo">
-                    <span id="player2name" class="playername">@Messages("quiz.player") 2</span>
-                    <p id="player2roundcounter" class="playerroundcounter">@Messages("quizover.wonrounds"): <span id="player2wonrounds" class="playerwonrounds">1</span></p>
+                    <span id="player2name" class="playername">@Messages("quiz.player") @game.getPlayers().get(1).getName()</span>
+                    <p id="player2roundcounter" class="playerroundcounter">@Messages("quizover.wonrounds"): <span id="player2wonrounds" class="playerwonrounds">@game.getWonRounds(computer)</span></p>
                 </div>
-                <a id="next" href="question.html" accesskey="n">@Messages("quizover.newgame")</a>
+                @helper.form(action = routes.Play.nextGame()){
+                	<input id="next" type="submit" value="@Messages("quizover.newgame")" accesskey="s"/>
+                }
+                
             </section>
         </section>
        
