@@ -13,6 +13,7 @@ import at.ac.tuwien.big.we14.lab2.api.*;
 import at.ac.tuwien.big.we14.lab2.api.impl.*;
 import play.mvc.*;
 import play.data.*;
+import play.cache.Cache;
 import static play.data.Form.*;
 import views.html.*;
 
@@ -24,6 +25,15 @@ public class Application extends Controller {
 	public static Result index() {
         return ok(authentication.render(loginForm,null));
     }
+	
+	public static Result showIndex(){
+		return ok(index.render());
+	}
+	
+	public static Result logout(){
+		Cache.set("user",null);
+		return ok(authentication.render(loginForm,null));
+	}
 	
 	@play.db.jpa.Transactional
 	public static Result login() {    	
@@ -41,13 +51,12 @@ public class Application extends Controller {
     	if(!result.isEmpty()){
     		if(result.get(0).getPassword().equals(password)){
     			Member user = result.get(0);
-    			return Play.startGame(user);
-    			//return ok(index.render()); //TODO zuerst auf Index Seite navigieren
+    			Cache.set("user", user);
+    			return ok(index.render());
     		}
     	}
     	    	
     	return badRequest(authentication.render(loginForm.fill(new Member(userName, password)),false));
-		
 	}
 
 }

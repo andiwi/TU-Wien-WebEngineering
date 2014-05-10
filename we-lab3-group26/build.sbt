@@ -5,6 +5,7 @@ version := "1.0-SNAPSHOT"
 libraryDependencies ++= Seq(
 	javaJdbc,
 	javaCore,
+	cache,
 	javaJpa,
 	"org.hibernate" % "hibernate-entitymanager" % "4.3.1.Final",
 	"com.google.code.gson" % "gson" % "2.2"

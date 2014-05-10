@@ -1,5 +1,4 @@
 lang=de
-otherlang=en
 authentication.tologin=Zum Login springen
 authentication.registry=Registrieren
 authentication.username=Benutzername:
@@ -38,6 +37,7 @@ registration.man=Männlich
 registration.woman=Weiblich
 registration.gender=Geschlecht:
 registartion.logindata=Login Daten
+registration.register=Registrieren
 registration.info=Mit "*" gekennzeichnete Felder sind Pflichtfelder
 roundover.score=Zwischenstand
 roundover.gotoroundrating=Zur Rundenwertung springen

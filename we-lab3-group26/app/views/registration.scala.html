@@ -18,7 +18,7 @@
         <nav role="navigation" aria-labelledby="navheading">
             <h2 id="navheading" class="accessibility">Navigation</h2>
             <ul>
-                <li><a id="loginlink" title="Klicke hier um dich anzumelden" href="/" accesskey="l">@Messages("authentication.loginButton")</a></li>
+                <li><a id="loginlink" title="Klicke hier um dich anzumelden" href="logout" accesskey="l">@Messages("authentication.loginButton")</a></li>
             </ul>
         </nav>
         <section role="main" id="register" aria-labelledby="registerheading">
@@ -78,7 +78,7 @@
 						<div id="error_msg_password" class="" role="alert">@error.message</div>
 					}
                     
-                    <input id="registersubmit" type="submit" value="Registrieren" accesskey="s"/>
+                    <input id="registersubmit" type="submit" value='@Messages("registration.register")' accesskey="s"/>
                     <p id="requiredhint">@Messages("registration.info")</p>
                 </fieldset>
             }

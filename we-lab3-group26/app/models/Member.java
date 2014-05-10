@@ -49,8 +49,8 @@ public class Member implements User{
 	}
 	
 	public List<ValidationError> validate() {
-        List<ValidationError> errors = null;
-        errors = new ArrayList<ValidationError>();
+		List<ValidationError> errors = null;
+		errors = new ArrayList<ValidationError>();
         String lang = play.i18n.Messages.get("lang");
         if (lang.equals("de")) {
             if (birthDateError())
@@ -74,7 +74,8 @@ public class Member implements User{
             return errors;
         } else
             return null;
-    }
+	}
+	
 	public boolean birthDateError(){
 		if(birthDate == null || birthDate == "")
 			return false;

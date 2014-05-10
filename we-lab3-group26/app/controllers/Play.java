@@ -12,6 +12,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.cache.Cache;
 import views.html.*;
 import at.ac.tuwien.big.we14.lab2.api.Answer;
 import at.ac.tuwien.big.we14.lab2.api.Choice;
@@ -33,9 +34,9 @@ public class Play extends Controller {
 	
 	//TODO das ganze in Sessions packen, evt. mit einem gamepool?
 	
-	public static Result startGame(Member member){ //neues Spiel mit neuem User
-		user = member;
-		factory = new PlayQuizFactory("conf/data." + play.i18n.Messages.get("lang") + ".json", user);
+	public static Result startGame(){ //neues Spiel mit neuem User
+		user = (Member) Cache.get("user");
+        factory = new PlayQuizFactory("conf/data." + play.i18n.Messages.get("lang") + ".json", user);
 		game = factory.createQuizGame();
 		questionCounter = 0;
 		
@@ -43,7 +44,7 @@ public class Play extends Controller {
 	}
 	
 	public static Result nextGame(){
-		return startGame(user);
+		return startGame();
 	}
 		
 	public static Result newRound(){

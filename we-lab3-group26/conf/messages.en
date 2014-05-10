@@ -1,5 +1,4 @@
 lang=en
-otherlang=de
 authentication.tologin=Go to login
 authentication.registry=registry
 authentication.username=Username:
@@ -38,6 +37,7 @@ registration.man=Man
 registration.woman=Woman
 registration.gender=Gender:
 registartion.logindata=login informations
+registration.register=register
 registration.info=With "*" marked Fields are Required Fields
 roundover.score=score
 roundover.gotoroundrating=go to round rating
