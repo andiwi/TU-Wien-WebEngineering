@@ -21,7 +21,7 @@ import views.html.*;
 public class Application extends Controller {
 	
 	private static Form<Member> loginForm = form(Member.class);
-	
+
 	public static Result index() {
         return ok(authentication.render(loginForm,null));
     }
@@ -34,7 +34,11 @@ public class Application extends Controller {
 		Cache.set("user",null);
 		return ok(authentication.render(loginForm,null));
 	}
-	
+
+    public static Result notlogedin(){
+        return ok(authentication.render(loginForm,null));
+    }
+
 	@play.db.jpa.Transactional
 	public static Result login() {    	
 		
@@ -55,7 +59,6 @@ public class Application extends Controller {
     			return ok(index.render());
     		}
     	}
-    	    	
     	return badRequest(authentication.render(loginForm.fill(new Member(userName, password)),false));
 	}
 

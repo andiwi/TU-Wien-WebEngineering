@@ -14,6 +14,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.cache.Cache;
 import views.html.*;
+import play.*;
+import play.mvc.*;
+import play.mvc.Http.*;
 import at.ac.tuwien.big.we14.lab2.api.Answer;
 import at.ac.tuwien.big.we14.lab2.api.Choice;
 import at.ac.tuwien.big.we14.lab2.api.Question;
@@ -33,7 +36,7 @@ public class Play extends Controller {
 	private static int questionCounter;
 	
 	//TODO das ganze in Sessions packen, evt. mit einem gamepool?
-	
+    @Security.Authenticated(Secured.class)
 	public static Result startGame(){ //neues Spiel mit neuem User
 		user = (Member) Cache.get("user");
         factory = new PlayQuizFactory("conf/data." + play.i18n.Messages.get("lang") + ".json", user);
@@ -42,18 +45,21 @@ public class Play extends Controller {
 		
 		return newRound();
 	}
-	
+
+    @Security.Authenticated(Secured.class)
 	public static Result nextGame(){
 		return startGame();
 	}
-		
+
+    @Security.Authenticated(Secured.class)
 	public static Result newRound(){
 		game.startNewRound(); // start new game/round
 		round = game.getCurrentRound();// current round
 		questionCounter = 0;
 		return nextQuestion();
 	}
-	
+
+    @Security.Authenticated(Secured.class)
 	public static Result nextQuestion(){
 		
 		question = round.getCurrentQuestion(user);
@@ -94,7 +100,8 @@ public class Play extends Controller {
 		questionCounter++;
 		return ok(quiz.render(question, answersOverviewUser, answersOverviewComputer));
 	}
-		
+
+    @Security.Authenticated(Secured.class)
 	public static Result answerQuestion(){
 		
 		List<Choice> allChoices = game.getCurrentRound().getCurrentQuestion(user).getAllChoices();
@@ -140,9 +147,9 @@ public class Play extends Controller {
 		
 		return nextQuestion();
 	}
-	
-	
-	
+
+
+    @Security.Authenticated(Secured.class)
 	public static Result finish(){
 		//TODO implement me!
 		User user = game.getPlayers().get(0);
