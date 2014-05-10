@@ -49,19 +49,32 @@ public class Member implements User{
 	}
 	
 	public List<ValidationError> validate() {
-		List<ValidationError> errors = null;
-		errors = new ArrayList<ValidationError>();
-		if(birthDateError())
-			errors.add(new ValidationError("birthDate", birthDate + "Verwenden Sie bitte folgendes Datumsformat: dd.mm.yyyy (z.B. 24.12.2012)."));
-		if(userNameError("length"))
-			errors.add(new ValidationError("userNameLength", "Der Benutzername muss mindestens 4 Zeichen und darf maximal 8 Zeichen enthalten."));
-		if(userNameError("used"))
-			errors.add(new ValidationError("userNameUsed", "Der Benutzername ist leider bereits vorhanden"));
-		if(passwordError())
-			errors.add(new ValidationError("password", "Das Passwort muss mindestens 4 Zeichen und darf maximal 8 Zeichen enthalten."));
-		return errors;
-	}
-	
+        List<ValidationError> errors = null;
+        errors = new ArrayList<ValidationError>();
+        String lang = play.i18n.Messages.get("lang");
+        if (lang.equals("de")) {
+            if (birthDateError())
+                errors.add(new ValidationError("birthDate", birthDate + " Verwenden Sie bitte folgendes Datumsformat: dd.mm.yyyy (z.B. 24.12.2012)."));
+            if (userNameError("length"))
+                errors.add(new ValidationError("userNameLength", "Der Benutzername muss mindestens 4 Zeichen und darf maximal 8 Zeichen enthalten."));
+            if (userNameError("used"))
+                errors.add(new ValidationError("userNameUsed", "Der Benutzername ist leider bereits vorhanden"));
+            if (passwordError())
+                errors.add(new ValidationError("password", "Das Passwort muss mindestens 4 Zeichen und darf maximal 8 Zeichen enthalten."));
+            return errors;
+        } else if (lang.equals("en")) {
+            if (birthDateError())
+                errors.add(new ValidationError("birthDate", birthDate + " Pleas use a Date like this: dd.mm.yyyy (ex. 24.12.2012)."));
+            if (userNameError("length"))
+                errors.add(new ValidationError("userNameLength", "The Username must contain at least 4 character and maximum 8 characters."));
+            if (userNameError("used"))
+                errors.add(new ValidationError("userNameUsed", "The Username is already used"));
+            if (passwordError())
+                errors.add(new ValidationError("password", "The Password must contain at least 4 character and maximum 8 characters."));
+            return errors;
+        } else
+            return null;
+    }
 	public boolean birthDateError(){
 		if(birthDate == null || birthDate == "")
 			return false;

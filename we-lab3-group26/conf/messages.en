@@ -1,3 +1,5 @@
+lang=en
+otherlang=de
 authentication.tologin=Go to login
 authentication.registry=registry
 authentication.username=Username:
@@ -27,8 +29,8 @@ quizover.finalscore=final score
 quizover.win=win
 quizover.wonrounds=won rounds
 quizover.newgame=new game
-registartion.gotoregistration=go to registration
-registartion.personalinformations=personal informations
+registration.gotoregistration=go to registration
+registration.personalinformations=personal informations
 registration.firstname=Firstname:
 registration.lastname=Lastname:
 registration.birthdate=Birthdate:

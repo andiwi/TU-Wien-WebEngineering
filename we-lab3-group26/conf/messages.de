@@ -1,3 +1,5 @@
+lang=de
+otherlang=en
 authentication.tologin=Zum Login springen
 authentication.registry=Registrieren
 authentication.username=Benutzername:
@@ -27,8 +29,8 @@ quizover.finalscore=Endstand
 quizover.win=gewinnt
 quizover.wonrounds=Gewonnene Runden
 quizover.newgame=Neues Spiel
-registartion.gotoregistration=Zur Registrierung springen
-registartion.personalinformations=Persönliche Daten
+registration.gotoregistration=Zur Registrierung springen
+registration.personalinformations=Persönliche Daten
 registration.firstname=Vorname:
 registration.lastname=Nachname:
 registration.birthdate=Geburtstag:

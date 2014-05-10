@@ -35,7 +35,7 @@ public class Play extends Controller {
 	
 	public static Result startGame(Member member){ //neues Spiel mit neuem User
 		user = member;
-		factory = new PlayQuizFactory("conf/data.de.json", user);
+		factory = new PlayQuizFactory("conf/data." + play.i18n.Messages.get("lang") + ".json", user);
 		game = factory.createQuizGame();
 		questionCounter = 0;
 		
