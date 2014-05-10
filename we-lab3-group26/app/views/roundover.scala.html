@@ -25,14 +25,14 @@
             <!-- winner message -->
             <section id="roundwinner" aria-labelledby="roundwinnerheading">
                 <h2 id="roundwinnerheading" class="accessibility">@Messages("roundover.roundscore")</h2>
-                <p class="roundwinnermessage">@Messages("quiz.player") @game.getCurrentRound().getRoundWinner().getName() @game.getCurrentRoundCount()  @Messages("quizover.win") @Messages("roundover.round=Runde") 1!</p>
+                <p class="roundwinnermessage">@game.getCurrentRound().getRoundWinner().getName() @Messages("quizover.win") @Messages("roundover.round") @game.getCurrentRoundCount()!</p>
             </section>
         
             <!-- round info -->    
             <section id="roundinfo" aria-labelledby="roundinfoheading">
                 <h2 id="roundinfoheading" class="accessibility">@Messages("quiz.playerinformations")</h2>
                 <div id="player1info" class="playerinfo">
-                    <span id="player1name" class="playername">@Messages("quiz.player") @game.getPlayers().get(0).getName()</span>
+                    <span id="player1name" class="playername">@game.getPlayers().get(0).getName()</span>
                     <ul class="playerroundsummary">
                        	@for((answer, index) <- answersOverviewUser.zipWithIndex){
                     		<li><span class="accessibility">@Messages("quiz.question") @index:</span><span id="player1answer@index" class="@answer">@Messages("quiz.@answer")</span></li>
@@ -41,7 +41,7 @@
                     <p id="player1roundcounter" class="playerroundcounter">@Messages("quizover.wonrounds"): <span id="player1wonrounds" class="playerwonrounds">@game.getWonRounds(user)</span></p>
                 </div>
                 <div id="player2info" class="playerinfo">
-                    <span id="player2name" class="playername">@Messages("quiz.player") @game.getPlayers().get(1).getName()</span>
+                    <span id="player2name" class="playername">@game.getPlayers().get(1).getName()</span>
                     <ul class="playerroundsummary">
                         @for((answer, index) <- answersOverviewComputer.zipWithIndex){
                     		<li><span class="accessibility">@Messages("quiz.question") @index:</span><span id="player2answer@index" class="@answer">@Messages("quiz.@answer")</span></li>
