@@ -16,7 +16,6 @@ public class QuizUser extends BaseEntity {
 		male, female
 	}
 
-
 	@Constraints.Required
 	@Constraints.MinLength(4)
 	@Constraints.MaxLength(8)
