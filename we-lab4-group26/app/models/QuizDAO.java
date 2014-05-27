@@ -1,13 +1,14 @@
 package models;
 
-import data.JSONDataInserter;
-import play.db.jpa.JPA;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.List;
-import org.hibernate.*;
-import org.hibernate.criterion.Restrictions;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+
+import play.db.jpa.JPA;
 /**
  * Provides Data Access methods for JPA
  */
@@ -100,7 +101,8 @@ public class QuizDAO implements IQuizDAO {
     @Override
     public <E extends BaseEntity> List<E> findEntities(Class<E> entityClazz) {
         // TODO: Implement Method
-        return (((Session) em().getDelegate()).createCriteria(entityClazz)).list();
+        Criteria c = ((Session) JPA.em().getDelegate()).createCriteria(entityClazz);
+        return c.list();
     }
 
 

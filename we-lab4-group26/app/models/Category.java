@@ -10,9 +10,9 @@ import javax.persistence.*;
 @Entity
 public class Category extends BaseEntity {
 
-
+	
     private String nameDE;
-    private String nameEN;
+	private String nameEN;
 
 
     //A list of questions in this category
