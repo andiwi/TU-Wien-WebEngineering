@@ -24,7 +24,7 @@ public class Question extends BaseEntity {
 
 
     //A list of choices belonging to this question
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question", fetch=FetchType.EAGER)
     private List<Choice> choices = new ArrayList<Choice>();
 
 
