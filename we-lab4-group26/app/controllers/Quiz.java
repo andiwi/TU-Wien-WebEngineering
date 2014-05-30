@@ -19,9 +19,24 @@ import views.html.quiz.quizover;
 import views.html.quiz.roundover;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.xml.bind.JAXBElement;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import highscore.at.ac.tuwien.big.we.highscore.Failure;
+import highscore.at.ac.tuwien.big.we.highscore.PublishHighScoreEndpoint;
+import highscore.at.ac.tuwien.big.we.highscore.PublishHighScoreService;
+import highscore.at.ac.tuwien.big.we.highscore.data.HighScoreRequestType;
+import highscore.at.ac.tuwien.big.we.highscore.data.ObjectFactory;
+import highscore.generated.Gender;
+import highscore.generated.User;
 
 @Security.Authenticated(Secured.class)
 public class Quiz extends Controller {
@@ -40,6 +55,8 @@ public class Quiz extends Controller {
 	private static QuizGame createNewGame() {
 		List<Category> allCategories = QuizDAO.INSTANCE.findEntities(Category.class);
 		Logger.info("Start game with " + allCategories.size() + " categories.");
+		//TODO User in das game speichern
+		//QuizGame game = new QuizGame(allCategories, QuizUser human)
 		QuizGame game = new QuizGame(allCategories);
 		game.startNewRound();
 		cacheGame(game);
@@ -160,13 +177,14 @@ public class Quiz extends Controller {
 	public static Result endResult() {
 		QuizGame game = cachedGame();
 		if (game != null && isGameOver(game)) {
-			//TODO Highscore posten
+			
+			publishHighscore(); //TODO
 			return ok(quizover.render(game));
 		} else {
 			return badRequest(Messages.get("quiz.no-end-result"));
 		}
 	}
-
+	
 	@play.db.jpa.Transactional(readOnly = true)
 	public static Result newRound() {
 		QuizGame game = cachedGame();
@@ -202,6 +220,86 @@ public class Quiz extends Controller {
 
 	private static Application application() {
 		return Play.application().getWrappedApplication();
+	}
+	
+	private static void publishHighscore()
+	{
+		//Get userdata from game
+		QuizGame game = cachedGame();
+				
+		highscore.generated.ObjectFactory gameFactory = new highscore.generated.ObjectFactory();
+		highscore.generated.User user = gameFactory.createUser();
+
+		QuizUser quizUser = game.getPlayers().get(0);
+		
+		user.setFirstname(quizUser.getFirstName());
+		user.setLastname(quizUser.getLastName());
+		/*
+		QuizUser.Gender g = quizUser.getGender();
+		String name = quizUser.getGender().name();
+		String string = quizUser.getGender().toString();
+		*/
+		user.setGender(Gender.fromValue(quizUser.getGender().name()));
+		user.setPassword("");
+		
+		XMLGregorianCalendar birthdate = null;
+		try {
+			GregorianCalendar calendar = new GregorianCalendar();
+			calendar.setTime(quizUser.getBirthDate());
+			birthdate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+		} catch (DatatypeConfigurationException e1) {
+			play.Logger.error(e1.toString());
+		}
+		user.setBirthdate(birthdate);
+		
+		user.setName("winner");
+		
+		//generate computer
+		highscore.generated.User computer = gameFactory.createUser();
+		computer.setFirstname("computer");
+		computer.setLastname("computer");
+		computer.setBirthdate(birthdate);
+		computer.setGender(Gender.FEMALE);
+		computer.setPassword("");
+		
+		if(game.getWinner().equals(user))
+		{
+			user.setName("winner");
+			computer.setName("loser");
+		}else
+		{
+			user.setName("loser");
+			computer.setName("winner");
+		}
+		
+		highscore.generated.Users users = gameFactory.createUsers();
+		users.getUser().add(user);
+		users.getUser().add(computer);
+		
+		highscore.generated.Quiz quiz = gameFactory.createQuiz();
+		quiz.setUsers(users);
+		
+		// create requestType
+		highscore.at.ac.tuwien.big.we.highscore.data.ObjectFactory highscoreDataFactory = new highscore.at.ac.tuwien.big.we.highscore.data.ObjectFactory();
+		HighScoreRequestType requestType = highscoreDataFactory.createHighScoreRequestType();
+		requestType.setQuiz(quiz);
+		requestType.setUserKey("rkf4394dwqp49x");
+		
+		// send request to HighScoreService
+		try
+		{
+			PublishHighScoreService service = new PublishHighScoreService();
+			PublishHighScoreEndpoint endpoint = service.getPublishHighScorePort();
+			
+			String uuid = endpoint.publishHighScore(requestType);
+			play.Logger.info(uuid);
+		}catch (Failure e)
+		{
+			play.Logger.error(e.toString());
+		}catch (Exception e)
+		{
+			play.Logger.error(e.toString());
+		}	
 	}
 
 }
