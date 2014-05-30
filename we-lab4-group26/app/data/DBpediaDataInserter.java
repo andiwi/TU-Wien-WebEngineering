@@ -1,5 +1,6 @@
 package data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.Category;
@@ -15,8 +16,18 @@ public class DBpediaDataInserter {
 	}
 	
 	private static List<Category> getData(){
+		List <Category> categories = new ArrayList<Category>();
+		for(int i = 4; i > 0; i--){
+			categories.add(getCategory());
+		}
 		//TODO DBpediaDaten!
 		return null;
+	}
+	
+	private static Category getCategory(){
+		Category category = new Category();
+		//TODO DBpediaDaten!
+		return category;
 	}
 	
 }
