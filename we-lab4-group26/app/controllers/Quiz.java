@@ -1,6 +1,28 @@
 package controllers;
 
-import models.*;
+import highscore.at.ac.tuwien.big.we.highscore.Failure;
+import highscore.at.ac.tuwien.big.we.highscore.PublishHighScoreEndpoint;
+import highscore.at.ac.tuwien.big.we.highscore.PublishHighScoreService;
+import highscore.at.ac.tuwien.big.we.highscore.data.HighScoreRequestType;
+import highscore.generated.Gender;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import models.Category;
+import models.Choice;
+import models.Question;
+import models.QuizDAO;
+import models.QuizGame;
+import models.QuizUser;
 import play.Logger;
 import play.Play;
 import play.api.Application;
@@ -20,21 +42,6 @@ import views.html.quiz.quiz;
 import views.html.quiz.quizover;
 import views.html.quiz.roundover;
 
-import java.util.*;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import highscore.at.ac.tuwien.big.we.highscore.Failure;
-import highscore.at.ac.tuwien.big.we.highscore.PublishHighScoreEndpoint;
-import highscore.at.ac.tuwien.big.we.highscore.PublishHighScoreService;
-import highscore.at.ac.tuwien.big.we.highscore.data.HighScoreRequestType;
-import highscore.at.ac.tuwien.big.we.highscore.data.ObjectFactory;
-import highscore.generated.Gender;
-import highscore.generated.User;
-
 @Security.Authenticated(Secured.class)
 public class Quiz extends Controller {
 
@@ -51,10 +58,32 @@ public class Quiz extends Controller {
 	@play.db.jpa.Transactional(readOnly = true)
 	private static QuizGame createNewGame() {
 		List<Category> allCategories = QuizDAO.INSTANCE.findEntities(Category.class);
-		Logger.info("Start game with " + allCategories.size() + " categories.");
-		//TODO User in das game speichern
-		//QuizGame game = new QuizGame(allCategories, QuizUser human)
-		QuizGame game = new QuizGame(allCategories);
+		
+		int user_id = Integer.parseInt(Secured.getAuthentication(session()));
+		QuizUser human = QuizDAO.INSTANCE.findById(user_id);
+
+		QuizGame game = null;
+		
+		if(human != null)
+		{
+			Logger.info("Start game with " + allCategories.size() + " categories and User: " + human.getUserName());
+			game = new QuizGame(allCategories, human);
+		}else
+		{
+			Logger.info("Start game with " + allCategories.size() + " categories");
+			game = new QuizGame(allCategories);
+		}
+		
+		//Generate computer
+		QuizUser computer = game.getPlayers().get(1);
+		computer.setFirstName("Wolfram");
+		computer.setLastName("Alpha");
+		computer.setGender(QuizUser.Gender.female);
+		computer.setPassword("");
+		computer.setUserName("computer"); 
+		computer.setBirthDate(new Date(2000, 01, 01));
+		
+
 		game.startNewRound();
 		cacheGame(game);
 		return game;
@@ -224,19 +253,20 @@ public class Quiz extends Controller {
 		//Get userdata from game
 		QuizGame game = cachedGame();
 				
+		QuizUser quizUser = game.getPlayers().get(0);
+		QuizUser computerUser = game.getPlayers().get(1);
+		
+		//set user data
 		highscore.generated.ObjectFactory gameFactory = new highscore.generated.ObjectFactory();
 		highscore.generated.User user = gameFactory.createUser();
-
-		QuizUser quizUser = game.getPlayers().get(0);
 		
 		user.setFirstname(quizUser.getFirstName());
 		user.setLastname(quizUser.getLastName());
-		/*
-		QuizUser.Gender g = quizUser.getGender();
-		String name = quizUser.getGender().name();
-		String string = quizUser.getGender().toString();
-		*/
-		user.setGender(Gender.fromValue(quizUser.getGender().name()));
+		
+		if(quizUser.getGender() != null)
+		{
+			user.setGender(Gender.fromValue(quizUser.getGender().name()));
+		}
 		user.setPassword("");
 		
 		XMLGregorianCalendar birthdate = null;
@@ -249,15 +279,22 @@ public class Quiz extends Controller {
 		}
 		user.setBirthdate(birthdate);
 		
-		user.setName("winner");
-		
-		//generate computer
+		//set computer data
 		highscore.generated.User computer = gameFactory.createUser();
-		computer.setFirstname("computer");
-		computer.setLastname("computer");
-		computer.setBirthdate(birthdate);
-		computer.setGender(Gender.FEMALE);
+		computer.setFirstname(computerUser.getFirstName());
+		computer.setLastname(computerUser.getLastName());
+		computer.setGender(Gender.fromValue(computerUser.getGender().name()));
 		computer.setPassword("");
+		
+		XMLGregorianCalendar birthdateComputer = null;
+		try {
+			GregorianCalendar calendar = new GregorianCalendar();
+			calendar.setTime(computerUser.getBirthDate());
+			birthdateComputer = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
+		} catch (DatatypeConfigurationException e1) {
+			play.Logger.error(e1.toString());
+		}
+		computer.setBirthdate(birthdateComputer);
 		
 		if(game.getWinner().equals(user))
 		{
@@ -299,7 +336,7 @@ public class Quiz extends Controller {
 			play.Logger.error(e.toString());
 		}
         if(uuid != null){
-            TwitterStatusMessage message = new TwitterStatusMessage(game.getWinner().getUserName(), uuid, new Date());
+        	TwitterStatusMessage message = new TwitterStatusMessage(game.getWinner().getUserName(), uuid, new Date());
             TwitterClient client = new TwitterClient();
             try {
                 client.publishUuid(message);
