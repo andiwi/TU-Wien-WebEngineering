@@ -13,17 +13,14 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
 import scala.Option;
+import twitter.TwitterClient;
+import twitter.TwitterStatusMessage;
 import views.html.quiz.index;
 import views.html.quiz.quiz;
 import views.html.quiz.quizover;
 import views.html.quiz.roundover;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -286,12 +283,13 @@ public class Quiz extends Controller {
 		requestType.setUserKey("rkf4394dwqp49x");
 		
 		// send request to HighScoreService
+        String uuid = null;
 		try
 		{
 			PublishHighScoreService service = new PublishHighScoreService();
 			PublishHighScoreEndpoint endpoint = service.getPublishHighScorePort();
-			
-			String uuid = endpoint.publishHighScore(requestType);
+
+            uuid = endpoint.publishHighScore(requestType);
 			play.Logger.info(uuid);
 		}catch (Failure e)
 		{
@@ -299,7 +297,17 @@ public class Quiz extends Controller {
 		}catch (Exception e)
 		{
 			play.Logger.error(e.toString());
-		}	
+		}
+        if(uuid != null){
+            TwitterStatusMessage message = new TwitterStatusMessage(game.getWinner().getUserName(), uuid, new Date());
+            TwitterClient client = new TwitterClient();
+            try {
+                client.publishUuid(message);
+                play.Logger.info("Es wurde auf Twitter gepostet. uuid: " + uuid);
+            } catch (Exception e) {
+                play.Logger.error(e.toString());
+            }
+        }
 	}
 
 }
