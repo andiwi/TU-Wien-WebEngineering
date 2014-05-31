@@ -5,22 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import play.Logger;
-
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-
-import at.ac.tuwien.big.we14.lab4.dbpedia.api.*;
-import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.*;
-
 import models.Category;
 import models.Choice;
 import models.Question;
 import models.QuizDAO;
+import at.ac.tuwien.big.we14.lab4.dbpedia.api.DBPediaService;
+import at.ac.tuwien.big.we14.lab4.dbpedia.api.SelectQueryBuilder;
+import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.DBPProp;
+import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.DBPedia;
+import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.DBPediaOWL;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 
 public class DBpediaDataInserter {

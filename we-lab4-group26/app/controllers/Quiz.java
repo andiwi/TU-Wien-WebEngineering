@@ -59,9 +59,8 @@ public class Quiz extends Controller {
 	private static QuizGame createNewGame() {
 		List<Category> allCategories = QuizDAO.INSTANCE.findEntities(Category.class);
 		
-		int user_id = Integer.parseInt(Secured.getAuthentication(session()));
-		QuizUser human = QuizDAO.INSTANCE.findById(user_id);
-
+		QuizUser human = user();
+		
 		QuizGame game = null;
 		
 		if(human != null)
@@ -204,7 +203,7 @@ public class Quiz extends Controller {
 		QuizGame game = cachedGame();
 		if (game != null && isGameOver(game)) {
 			
-			publishHighscore(); //TODO
+			publishHighscore();
 			return ok(quizover.render(game));
 		} else {
 			return badRequest(Messages.get("quiz.no-end-result"));
@@ -272,7 +271,8 @@ public class Quiz extends Controller {
 		XMLGregorianCalendar birthdate = null;
 		try {
 			GregorianCalendar calendar = new GregorianCalendar();
-			calendar.setTime(quizUser.getBirthDate());
+			if(quizUser.getBirthDate() != null)
+				calendar.setTime(quizUser.getBirthDate());
 			birthdate = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
 		} catch (DatatypeConfigurationException e1) {
 			play.Logger.error(e1.toString());
@@ -289,7 +289,8 @@ public class Quiz extends Controller {
 		XMLGregorianCalendar birthdateComputer = null;
 		try {
 			GregorianCalendar calendar = new GregorianCalendar();
-			calendar.setTime(computerUser.getBirthDate());
+			if(computerUser.getBirthDate() != null)
+				calendar.setTime(computerUser.getBirthDate());
 			birthdateComputer = DatatypeFactory.newInstance().newXMLGregorianCalendar(calendar);
 		} catch (DatatypeConfigurationException e1) {
 			play.Logger.error(e1.toString());
