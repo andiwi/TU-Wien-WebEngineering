@@ -16,8 +16,6 @@ import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.DBPedia;
 import at.ac.tuwien.big.we14.lab4.dbpedia.vocabulary.DBPediaOWL;
 
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -239,50 +237,5 @@ public class DBpediaDataInserter {
 			}
 		}
 		return q;
-	}
-	
-	private static Category addQuestions(Category c){
-		//for(int i = 4; i > 0; i--){
-			Question q = new Question();
-			q.setTextDE("Wer war nie österreichischer Präsident?");
-			q.setTextEN("Who has not been an austrian president?");
-			q.setMaxTime(new BigDecimal(30));
-			Choice choice = new Choice();
-			choice.setTextDE("RICHTIG");
-			choice.setTextEN("RIGHT");
-			choice.setCorrectAnswer(true);
-			q.addRightChoice(choice);
-			//TODO Create 5 Questions
-			c.addQuestion(q);
-			//Logger.info(c.getQuestions().get(0).getTextDE().toString()+"    -worked?");
-		//}
-		// Resource Tim Burton is available at http://dbpedia.org/resource/Tim_Burton
-		// Load all statements as we need to get the name later
-		Resource director = DBPediaService.loadStatements(DBPedia.createResource("Tim_Burton"));
-		// Resource Johnny Depp is available at http://dbpedia.org/resource/Johnny_Depp
-		// Load all statements as we need to get the name later
-		Resource actor = DBPediaService.loadStatements(DBPedia.createResource("Johnny_Depp"));
-		// retrieve english and german names, might be used for question text
-		String englishDirectorName = DBPediaService.getResourceName(director, Locale.ENGLISH);
-		String germanDirectorName = DBPediaService.getResourceName(director, Locale.GERMAN);
-		String englishActorName = DBPediaService.getResourceName(actor, Locale.ENGLISH);
-		String germanActorName = DBPediaService.getResourceName(actor, Locale.GERMAN);
-		// build SPARQL-query
-		SelectQueryBuilder movieQuery = DBPediaService.createQueryBuilder()
-		.setLimit(5) // at most five statements
-		.addWhereClause(RDF.type, DBPediaOWL.Film)
-		.addPredicateExistsClause(FOAF.name)
-		.addWhereClause(DBPediaOWL.director, director)
-		.addFilterClause(RDFS.label, Locale.GERMAN)
-		.addFilterClause(RDFS.label, Locale.ENGLISH);
-		// retrieve data from dbpedia
-		Model timBurtonMovies = DBPediaService.loadStatements(movieQuery.toQueryString());
-		// get english and german movie names, e.g., for right choices
-		List<String> englishTimBurtonMovieNames =
-		DBPediaService.getResourceNames(timBurtonMovies, Locale.ENGLISH);
-		List<String> germanTimBurtonMovieNames =
-		DBPediaService.getResourceNames(timBurtonMovies, Locale.GERMAN);
-		return c;
-	}
-	
+	}	
 }
