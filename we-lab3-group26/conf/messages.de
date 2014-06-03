@@ -15,6 +15,7 @@ quiz.gotoquestion=Zur Frage springen
 quiz.playerinformations=Spielerinformationen
 quiz.player=Spieler
 quiz.question=Frage
+quiz.answer=Antwort
 quiz.correct=Richtig
 quiz.incorrect=Falsch
 quiz.unknown=Unbekannt

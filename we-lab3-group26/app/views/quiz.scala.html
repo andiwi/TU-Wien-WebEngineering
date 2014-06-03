@@ -29,7 +29,7 @@
                     <span id="player1name">@Messages("quiz.player") 1</span>
                     <ul class="playerroundsummary">
                        	@for((answer, index) <- answersOverviewUser.zipWithIndex){
-                    		<li><span class="accessibility">@Messages("quiz.question") @index:</span><span id="player1answer@index" class="@answer">@Messages("quiz.@answer")</span></li>
+                    		<li><span class="accessibility">@Messages("quiz.question") @index:</span><span id="player1answer@index" class="@answer">@Messages("quiz.answer")</span></li>
                     	}
                     </ul>
                 </div>
@@ -119,9 +119,9 @@
                 hiddenInput.val(value);
                 meter.val(value);
                 timeleft.text(secToMMSS(value));
-                
+
                 if(value <= 0) {
-                    $('#questionform').submit();
+                    $('#next').click();
                 }
             }
             

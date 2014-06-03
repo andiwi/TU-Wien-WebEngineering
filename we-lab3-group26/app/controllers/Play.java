@@ -35,8 +35,7 @@ public class Play extends Controller {
 	private static Question question;
 	private static int questionCounter;
 	
-	//TODO das ganze in Sessions packen, evt. mit einem gamepool?
-    @Security.Authenticated(Secured.class)
+	@Security.Authenticated(Secured.class)
 	public static Result startGame(){ //neues Spiel mit neuem User
 		user = (Member) Cache.get("user");
         factory = new PlayQuizFactory("conf/data." + play.i18n.Messages.get("lang") + ".json", user);
